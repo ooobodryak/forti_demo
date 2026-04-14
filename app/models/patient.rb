@@ -21,11 +21,18 @@ class Patient < ApplicationRecord
 
   ### Скоупы.
 
-  # @!method recipes_count_eq
+  # @!method with_recipes_count
   #   +Scope+: Пациенты, у которых +value+ связанных {Recipe}.
+  #   @param [Integer] value
   #   @return [Array<Patient>]
-  scope :recipes_count_eq, ->(value) {
-    joins(:recipes).group(:id).having("count(recipes.id) = ?", value)
+  scope :with_recipes_count, ->(value) {
+    # NOTE: При сложных выборках могут возникать конфликты
+    #       по типу `PG::GroupingError`.
+    subquery = Patient.joins(:recipes)
+                    .group("patients.id")
+                    .having("count(recipes.id) = ?", value)
+                    .select("patients.id")
+    where(id: subquery)
   }
 
   ### Валидации.
@@ -69,7 +76,16 @@ class Patient < ApplicationRecord
   # Разрешённые скоупы для поиска.
   # @return [Array<String>]
   def self.ransackable_scopes(auth_object = nil)
-    ["recipes_count_eq"]
+    [:with_recipes_count]
+  end
+
+  # АХТУНГ!
+  # Ransack вредный -- принимает 1/"1", 0/"0", false/"false", true/"true"
+  # как что-то родственное по умолчанию, из-за чего невозможно адекватное поведение
+  # в кастомных скоупах.
+  # Пропускаем.
+  def self.ransackable_scopes_skip_sanitize_args
+    [:with_recipes_count]
   end
 
 end

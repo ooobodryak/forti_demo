@@ -6,26 +6,39 @@ export default class extends Controller {
   static targets = ["pagination", "entries", "search_form", "count"]
 
   paginate(event) {
-    event.preventDefault()
-
-    let url
-
     if (event.target.tagName === "SELECT") {
-      url = new URL(window.location.href)
+      event.preventDefault()
+      const url = this.getFormUrl()
       url.searchParams.set("per_page", event.target.value)
       url.searchParams.set("page", 1)
-    } else {
-      const link = event.target.closest("a")
-      if (!link) return
-
-      url = new URL(link.href)
-
-      const select = this.element.querySelector('select[name="per_page"]')
-      if (select) {
-        url.searchParams.set("per_page", select.value)
-      }
+      this.fetchData(url)
+      return
     }
 
+    const link = event.target.closest("a")
+
+    if (!link || !link.href || link.href === "javascript:void(0)" || link.parentElement.classList.contains('active')) {
+      event.preventDefault()
+      return
+    }
+
+    event.preventDefault()
+
+    const url = this.getFormUrl()
+    const linkUrl = new URL(link.href)
+    const page = linkUrl.searchParams.get("page") || 1
+
+    url.searchParams.set("page", page)
+
+    const select = this.element.querySelector('select[name="per_page"]')
+    if (select) {
+      url.searchParams.set("per_page", select.value)
+    }
+
+    this.fetchData(url)
+  }
+
+  fetchData(url) {
     fetch(url.toString(), {
       headers: { "Accept": "application/json" }
     })
@@ -33,8 +46,26 @@ export default class extends Controller {
     .then(data => {
       this.entriesTarget.innerHTML = data.entries
       this.paginationTargets.forEach(el => el.innerHTML = data.pagination)
+
+      if (this.hasCountTarget) this.countTarget.innerText = data.entry_count
+
       window.history.pushState({}, "", url.toString())
     })
+  }
+
+  getFormUrl() {
+    const form = this.search_formTarget
+    const url = new URL(form.action)
+    const formData = new URLSearchParams(new FormData(form))
+    formData.forEach((value, key) => {
+      if (value) {
+        url.searchParams.set(key, value)
+      } else {
+        url.searchParams.delete(key)
+      }
+    })
+
+    return url
   }
 
   search(event) {
@@ -68,7 +99,7 @@ export default class extends Controller {
   }
 
   async destroy_entry(event) {
-    const target = event.target.closest('[data-role="delete-button"]');
+    const target = event.target.closest("[data-role='delete-button']");
     if (!target) return;
 
     event.preventDefault();
@@ -90,7 +121,7 @@ export default class extends Controller {
       });
 
       const data = await response.json();
-      
+
       if (data.flash) this.showFlash(data.flash);
 
       if (response.ok) {
