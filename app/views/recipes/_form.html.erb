@@ -1,0 +1,70 @@
+<%# Общая форма для редактирования/просмотра/создания Рецепта.
+  #
+  # Обязательные.
+  # @param [Recipe] recipe Рецепт.
+  #
+  # Необязательные.
+  # @param [Boolean] readonly Разрешено только читать поля?
+%>
+
+<%
+  readonly = local_assigns.fetch(:readonly, true)
+%>
+
+<div id="recipe-form-wrapper">
+  <%= form_with(model: recipe, data: { action: "submit->resource#submit_form" }) do |form| %>
+
+    <% if recipe.errors.any? %>
+      <div class="alert alert-danger">
+        <h6 class="alert-heading">Ошибки при сохранении:</h6>
+        <ul class="mb-0">
+          <% recipe.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="mb-3">
+      <label class="form-label fw-bold">Тип сложности</label>
+      <div class="form-control bg-light">
+        <%= recipe.difficulty_type == "hard" ? "Сложный" : "Простой" %>
+      </div>
+      <div class="form-text">Рассчитывается автоматически на основе списка лекарств.</div>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :patient_id, "Пациент", class: "form-label" %>
+      <%= form.collection_select :patient_id, Patient.all, :id, :last_name,
+          { prompt: "Выберите пациента" },
+          { class: "form-select", disabled: readonly } %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :drug_list, "Список лекарств (через запятую)", class: "form-label" %>
+      <%= form.text_field :drug_list,
+          value: recipe.drug_list&.join(", "),
+          class: "form-control",
+          readonly: readonly,
+          placeholder: "Напр: морфин, анальгин" %>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <%= form.label :start_at, "Действует ОТ", class: "form-label" %>
+        <%= form.date_field :start_at, class: "form-control", readonly: readonly %>
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <%= form.label :end_at, "Действует ДО", class: "form-label" %>
+        <%= form.date_field :end_at, class: "form-control", readonly: readonly %>
+      </div>
+    </div>
+
+    <% unless readonly %>
+      <div class="actions mt-3">
+        <%= form.submit "Сохранить рецепт", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

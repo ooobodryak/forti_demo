@@ -1,0 +1,25 @@
+<%# Страница Пациентов.
+  #
+  # Обязательные.
+  # @param [Pagy] pagy Объект пагинации.
+  # @param [Array<Patient>] patients Список Пациентов.
+  # @param [Ransack::Search] q
+%>
+
+<h1>Пациенты</h1>
+
+<%= link_to "Новый пациент", new_patient_path %>
+
+<div data-controller="resource">
+  <div>
+    Число пациентов: <span data-resource-target="count"><%= pagy.count %></span>
+  </div>
+
+  <%= render partial: "search", locals: { q: q } %>
+
+  <%= render partial: "pagy/nav", locals: { pagy: pagy } %>
+
+  <%= render partial: "table", locals: { patients: patients } %>
+
+  <%= render partial: "pagy/nav", locals: { pagy: pagy } %>
+</div>

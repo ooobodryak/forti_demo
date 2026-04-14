@@ -1,0 +1,26 @@
+<%# Таблица Рецептов.
+  #
+  # Обязательные.
+  # @param [Pagy] pagy
+  # @param [Array<Recipe>] recipes Список Рецептов.
+%>
+
+<div class="table-responsive border rounded shadow-sm bg-white">
+  <table class="table table-hover align-middle mb-0" id="recipes-table">
+    <thead class="table-light">
+      <tr>
+        <th class="ps-3 py-3 text-secondary text-uppercase small fw-bold">Лекарства</th>
+        <th class="py-3 text-secondary text-uppercase small fw-bold">Срок действия</th>
+        <th class="py-3 text-secondary text-uppercase small fw-bold">Сложность</th>
+        <th class="py-3 text-secondary text-uppercase small fw-bold">Пациент</th>
+        <th class="pe-3 py-3 text-secondary text-uppercase small fw-bold text-end">Действия</th>
+      </tr>
+    </thead>
+
+    <tbody data-resource-target="entries" data-action="click->resource#destroy_entry" class="border-top-0">
+      <% recipes.each do |recipe| %>
+        <%= render "row", recipe: recipe %>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,20 @@
+.pagy.nav {
+  display: flex;
+  gap: 8px; 
+  margin: 20px 0;
+}
+
+.btn-link-style {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #0d6efd;
+  text-decoration: underline;
+  cursor: pointer;
+  display: inline;
+}
+
+.btn-link-style:hover {
+  color: #0a58ca;
+  text-decoration: none;
+}

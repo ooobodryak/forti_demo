@@ -1,0 +1,65 @@
+<%# Строка таблицы Рецептов.
+  #
+  # Обязательные.
+  # @param [Recipe] recipe Рецепт.
+%>
+
+<tr>
+  <td class="ps-3 py-3">
+    <details class="position-relative">
+      <summary class="btn btn-sm btn-secondary-subtle border text-dark p-1 px-2 list-unstyled">
+        <%= recipe.drug_list.size %> (кликни, чтобы посмотреть)
+      </summary>
+
+      <div class="position-absolute bg-white border shadow-sm p-2 rounded"
+          style="z-index: 1000; min-width: 200px; top: 100%; left: 0;">
+        <h6 class="small fw-bold border-bottom pb-1 mb-1">Список лекарств:</h6>
+        <ul class="list-unstyled mb-0 small">
+          <% recipe.drug_list.each do |drug| %>
+            <li class="py-1 text-nowrap">* <%= drug %></li>
+          <% end %>
+        </ul>
+      </div>
+    </details>
+  </td>
+
+  <td class="py-3 small">
+    <%= recipe.start_at.strftime("%d.%m.%Y") %> — <%= recipe.end_at.strftime("%d.%m.%Y") %>
+  </td>
+
+  <td class="py-3">
+    <% if recipe.difficulty_type == "hard" %>
+      <span class="badge rounded-pill bg-danger-subtle text-danger border border-danger-subtle">Сложный</span>
+    <% else %>
+      <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle">Простой</span>
+    <% end %>
+  </td>
+
+  <td class="py-3">
+    <%= link_to patient_path(recipe.patient), class: "text-decoration-none fw-medium" do %>
+      <i class="bi bi-person me-1"></i>
+      <%= recipe.patient.last_name %> <%= recipe.patient.first_name %>
+    <% end %>
+  </td>
+
+  <td class="pe-3 py-3 text-end actions text-nowrap">
+    <div class="d-flex justify-content-end align-items-center gap-2">
+      <%= link_to "Show", recipe,
+          class: "btn btn-sm btn-outline-primary",
+          data: { role: "show-link" } %>
+
+      <%= link_to "Edit", edit_recipe_path(recipe),
+          class: "btn btn-sm btn-outline-secondary",
+          data: { role: "edit-link" } %>
+
+      <%= button_to "Destroy", recipe,
+          method: :delete,
+          form: {
+            data: { entry_id: recipe.id, role: "delete-button", turbo_confirm: "Удалить рецепт?", url: recipe_path(recipe) },
+            class: "d-inline"
+          },
+          class: "btn btn-sm btn-outline-danger"
+      %>
+    </div>
+  </td>
+</tr>

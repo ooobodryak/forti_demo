@@ -1,0 +1,48 @@
+<%# Форма поиска Пациентов
+  #
+  # Обязательные.
+  # @param [Ransack::Search] q
+%>
+
+<div class="search-form-container mb-3 border rounded p-2 bg-light shadow-sm" style="max-width: 800px;">
+  <%= search_form_for q, url: patients_path, method: :get, data: { resource_target: "search_form", action: "submit->resource#search" } do |f| %>
+
+    <div class="row g-2 align-items-end">
+
+      <div class="col-md-3">
+        <%= f.label :last_name_or_first_name_cont, "Имя/Фамилия", class: "form-label small mb-1 fw-semibold" %>
+        <%= f.search_field :last_name_or_first_name_cont, class: "form-control form-control-sm", placeholder: "Поиск..." %>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label small mb-1 fw-semibold">Возраст</label>
+        <div class="input-group input-group-sm">
+          <%= f.number_field :age_gteq, class: "form-control", placeholder: "От" %>
+          <%= f.number_field :age_lteq, class: "form-control", placeholder: "До" %>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <%= f.label :recipes_id_null, "Статус рецептов", class: "form-label small mb-1 fw-semibold" %>
+        <%= f.select :recipes_id_null,
+                     [["Все", nil], ["Без рецептов", true], ["С рецептами", false]],
+                     {},
+                     { class: "form-select form-select-sm" } %>
+      </div>
+
+      <div class="col-md-2">
+        <%= f.label :recipes_count_eq, "Кол-во рецептов", class: "form-label small mb-1 fw-semibold" %>
+        <%= f.number_field :recipes_count_eq, min: 0, step: 1, class: "form-control form-control-sm", placeholder: "Ровно..." %>
+      </div>
+
+      <div class="col-md-2">
+        <%= f.submit "Найти", class: "btn btn-sm btn-primary w-100" %>
+      </div>
+
+      <div class="col-md-2">
+        <%= link_to "Сбросить", patients_path, class: "btn btn-sm btn-link text-decoration-none p-0 pb-1" %>
+      </div>
+
+    </div>
+  <% end %>
+</div>

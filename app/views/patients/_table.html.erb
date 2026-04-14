@@ -1,0 +1,26 @@
+<%# Таблица Пациентов.
+  #
+  # Обязательные.
+  # @param [Pagy] pagy
+  # @param [Array<Patient>] patients Список Пациентов.
+%>
+
+<div class="table-responsive border rounded shadow-sm bg-white">
+  <table class="table table-hover align-middle mb-0" id="patients-table">
+    <thead class="table-light">
+      <tr>
+        <th class="ps-3 py-3 text-secondary text-uppercase small fw-bold">Имя</th>
+        <th class="py-3 text-secondary text-uppercase small fw-bold">Фамилия</th>
+        <th class="py-3 text-secondary text-uppercase small fw-bold">Возраст</th>
+        <th class="py-3 text-secondary text-uppercase small fw-bold text-center">Рецепты</th>
+        <th class="pe-3 py-3 text-secondary text-uppercase small fw-bold text-end">Действия</th>
+      </tr>
+    </thead>
+
+    <tbody data-resource-target="entries" data-action="click->resource#destroy_entry" class="border-top-0">
+      <% patients.each do |patient| %>
+        <%= render "row", patient: patient %>
+      <% end %>
+    </tbody>
+  </table>
+</div>

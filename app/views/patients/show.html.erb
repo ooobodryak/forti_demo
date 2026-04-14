@@ -1,0 +1,8 @@
+<h1>Пациент номер <%= @patient.id %></h1>
+
+<%= render "form", patient: @patient, readonly: true %>
+
+<div>
+  <%= link_to "Edit this patient", edit_patient_path(@patient) %> |
+  <%= link_to "Back to patients", patients_path %>
+</div>

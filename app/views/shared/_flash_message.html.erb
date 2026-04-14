@@ -1,0 +1,18 @@
+<%# Флеш-сообщение.
+  #
+  # Обязательные.
+  # @param [String] type Тип сообщения.
+  # @param [String] msg Сообщение.
+%>
+
+<div class="custom-flash alert alert-<%= type %> alert-dismissible fade show shadow border-0"
+     role="alert"
+     style="position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 250px;">
+  <div class="d-flex align-items-center">
+    <div class="me-2">
+      <%= type == 'success' ? "УСПЕШНО" : "НЕУДАЧНО" %>
+    </div>
+    <div><%= msg %></div>
+  </div>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>

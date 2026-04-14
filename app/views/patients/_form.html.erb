@@ -1,0 +1,50 @@
+<%# Общая форма для редактирования/просмотра/создания Пациента.
+  #
+  # Обязательные.
+  # @param [Patient] patient Пациент.
+  #
+  # Необязательные.
+  # @param [Boolean] readonly Разрешено только читать поля?
+  #
+%>
+
+<%
+  readonly = local_assigns.fetch(:readonly, true)
+%>
+
+<div id="patient-form-wrapper">
+  <%= form_with(model: patient, data: { action: "submit->resource#submit_form" }) do |form| %>
+
+    <% if patient.errors.any? %>
+      <div class="alert alert-danger">
+        <h6 class="alert-heading">Ошибки при сохранении:</h6>
+        <ul class="mb-0">
+          <% patient.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="mb-3">
+      <%= form.label :first_name, "First name", class: "form-label" %>
+      <%= form.text_field :first_name, class: "form-control", readonly: readonly %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :last_name, "Last name", class: "form-label" %>
+      <%= form.text_field :last_name, class: "form-control", readonly: readonly %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :age, "Age", class: "form-label" %>
+      <%= form.number_field :age, min: 0, step: 1, class: "form-control", readonly: readonly %>
+    </div>
+
+    <% unless readonly %>
+      <div class="actions mt-3">
+        <%= form.submit "Сохранить", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

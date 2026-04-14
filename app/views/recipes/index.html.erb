@@ -1,0 +1,25 @@
+<%# Страница Рецептов.
+  #
+  # Обязательные.
+  # @param [Pagy] pagy Объект пагинации.
+  # @param [Array<Recipe>] recipes Список Рецептов.
+  # @param [Ransack::Search] q
+%>
+
+<h1>Рецепты</h1>
+
+<%= link_to "Новый рецепт", new_recipe_path %>
+
+<div data-controller="resource">
+  <div>
+    Число пациентов: <span data-resource-target="count"><%= pagy.count %></span>
+  </div>
+
+  <%= render partial: "search", locals: { q: q } %>
+
+  <%= render partial: "pagy/nav", locals: { pagy: pagy } %>
+
+  <%= render partial: "table", locals: { recipes: recipes } %>
+
+  <%= render partial: "pagy/nav", locals: { pagy: pagy } %>
+</div>

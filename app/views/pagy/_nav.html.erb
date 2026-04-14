@@ -1,0 +1,22 @@
+<%# Пагинация.
+  #
+  # Обязательные.
+  # @param [Pagy] pagy Объект пагниации.
+%>
+
+<div data-resource-target="pagination" data-action="click->resource#paginate">
+  <div class="d-flex align-items-center gap-2 mb-3">
+    <label class="small text-secondary text-uppercase fw-bold">Показывать:</label>
+    <select class="form-select form-select-sm w-auto"
+            name="per_page"
+            data-action="change->resource#paginate">
+      <% [5, 10, 25, 50].each do |count| %>
+        <option value="<%= count %>" <%= 'selected' if pagy.limit == count %>>
+          <%= count %>
+        </option>
+      <% end %>
+    </select>
+  </div>
+
+  <%== pagy_bootstrap_nav(pagy) %>
+</div>
